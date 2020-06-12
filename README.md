@@ -75,3 +75,33 @@ getTotal() {
 + He dejado fuera la opción de tener varias calidades. Si distinguiésemos entre FullHD y 4K, las clases SreamingService y DownloadService tendrían dos variables float, y un flag que indicase el tipo de calidad (`int` o `string`) y realizaríamos la comparación antes del `return service.movieCoef * multimediaCon ...` 
 
 + Para comprobar que no hay problemas con la extracción del MultimediaContent he colocado un condicional, para no complicarlo mucho, pero lo ideal sería usar un `try…catch` o similar para manejar los errores.
+
+
+## Pregunta práctica
+
+Por diversos motivos, principalmente de pelea con la API de Google Maps, con la cual no había tenido que pelearme hasta hoy, no he podido terminar el ejercicio.
+Dejo escrito cual creo que sería la estructura del mismo:
+
+*REACT*
+
+Componentes para:
+
+- El mapa
+- La caja de busqueda con sugerencias
+- Los markers
+
+*REDUX*
+
+- El `Store` almacenando un array de "Markers"
+- Un `Action` cuyo `type` sea "ADD_MARKER"
+- Un `Reducer` que se encargue de añadir los markers al `Store`.
+
+La dínámica trataría de tener `Listener` para el `input` de la caja de búsqueda, y en el momento en el que el usuario selecciona un lugar del autocompletar o del droplist, añadimos tanto el marker en el mapa (lo podemos pasar por props) como al `Store` por `distpatch`. 
+
+*CSS*
+
+Los estilos, para una aplicación de este tamaño, sería suficiente con un CSS Module.
+
+
+
+Muchas gracias.
