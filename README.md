@@ -1,68 +1,77 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+##  Ejercico de Frontend 
 
-## Available Scripts
+Por Alex Piñeiro
 
-In the project directory, you can run:
+## Pregunta teórica
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Para fijar un punto de partida, comparto mi comprensión del modelo, aprovechando para hacer una analogía con algún servicio, como Netflix por ejemplo, que después me ayudará a expresar mi respuesta:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Un usuario podrá pedir uno o multiples servicios, por ejemplo, dos “perfiles” viendo contenido al mismo tiempo.
 
-### `npm test`
+- Estos servios son obligatoriamente, o streaming o descarga. Cada servicio provee al espectador de un solo contenido multimedia a la vez, el cual puede ser o no, premium.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+***
 
-### `npm run build`
+### EJ 1 - Pregunta 1 (parte 1)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+A nivel estrictamente técnico, esta función no realizará nunca su cometido debido a las comparaciones que hace en los condicionales. 
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+En el primer condicional desea saber si el servicio es de **clase** `StreamingService` o **clase** `DownloadService`, y para ello utiliza el operador `typeof` que compara tipos de datos. La operación `typeof` service devolverá un `object`, que siempre resultara falso en las comparaciones que se muestran. Lo mismo para el `typeof` `multmediaContent`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Si deseásemos que este método funcionase como debe, sería más apropiado utilizar `instanceof`. 
+`if (service instanceof StreamingService)` devolvería true, si realmente fuese esa clase.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+También la función presupone que no se dará el caso en el que exista un `Service` sin un `MultimediaContent`, lo que podría dar un error bastante fatal al hacer `getMultimediaContent()`. Sería conveniente comprobar que no tenemos `null` o `undefined` a la hora de entrar en los condicionales. 
+Lo propondré en el punto 2.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+***
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### EJ 1 - Pregunta 1 (parte 2)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Analizando el modelo y con intención de proponer alguna mejora, a mi parecer en este planteamiento inicial no tiene sentido la existencia de las clases `StreamingService` y `DownloadService`.
 
-## Learn More
+Toda la información del precio lo tiene el propio `MultimediaContent`, y las clases solo se están utilizando para elegir qué precio usar. En este caso con una variable a modo *flag* (`int`, `bool` o `string`) dentro de Service sería suficiente para los condicionales.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Sin embargo, **si** tiene sentido a nivel de escalabilidad, y en términos de POO mantener estas clases para futuras ofertas. Por ejemplo, diferenciar entre un streaming FullHD y unoo 4K; o ofrecer una “premiere” dónde por un mayor precio puedes ver un contenido antes de su release oficial…
+Pero para este caso, creo que el peso del precio debe estar en el tipo de servicio, y no en el contenido.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Mi propuesta sería que los `MultimediaContent` tuviesen solo un precio base, y que en función del tipo de servicio de streaming o de descarga, éstos tengan un precio “on-top” del film, o quizás un coeficiente (ejemplo: streaming FHD = precioBase *1,2 // streaming 4K = precioBase *1,6). Mantenemos la clase de contenido premium, pues en un futuro puede interesar extenderla. 
 
-### Code Splitting
+Esto permite modificar los tipos de servicio, sin tener que añadir a cada contenido multimedia un valor más por cada escalada. 
+Habría que ver si para el producto final tiene sentido todo lo que digo, pero es mi propuesta.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+***
 
-### Analyzing the Bundle Size
+### EJ 1 - Pregunta 2
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+Tomando en cuenta todo lo expresado hasta ahora para “mejorar” la función de `getTotal()`, resumo los puntos clave:
 
-### Making a Progressive Web App
+⋅⋅* Se quedan las clases `StreamingService` y `DownloadService`. 
+Para simplificar el ejemplo, supondremos que solo van a tener un coeficiente de precio sobre el valor de la película.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+⋅⋅* MultimediaContent solo tiene un valor price.
 
-### Advanced Configuration
+```
+getTotal() {
+    let total = 0;
+    // map function for get all the prices after applying prices modifications regarding on type os service and premiumness
+    let allPrices = this.services.map(service => {
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+        let multimediaContent = service.getMultimediaContent();
+        if (multimediaContent != null && multimediaContent != undefined) {
+            // service wheter is StreamingService or DownloadService; in both cases we use its coeficient. 
+            // we can also check if the movie is Premium and add the additionalFee in affirmative case, or not adding anything at all.
+            return service.movieCoef * multimediaContent.price + (multimediaContent instanceof PremiumContent ? multimediaContent.additionalFee : 0);
+        }
+    });
+    // use reduce for iterate along all the prices and sum them all together.
+    total = allPrices.reduce((a, b) => a + b, 0);
+    return total;
+}
+```
 
-### Deployment
+⋅⋅* * He dejado fuera la opción de tener varias calidades. Si distinguiésemos entre FullHD y 4K, las clases SreamingService y DownloadService tendrían dos variables float, y un flag que indicase el tipo de calidad (`int` o `string`) y realizaríamos la comparación antes del `return service.movieCoef * multimediaCon ...` 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+⋅⋅* * Para comprobar que no hay problemas con la extracción del MultimediaContent he colocado un condicional, para no complicarlo mucho, pero lo ideal sería usar un `try…catch` o similar para manejar los errores.
