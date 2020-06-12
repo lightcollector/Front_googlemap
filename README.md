@@ -48,10 +48,10 @@ Habría que ver si para el producto final tiene sentido todo lo que digo, pero e
 
 Tomando en cuenta todo lo expresado hasta ahora para “mejorar” la función de `getTotal()`, resumo los puntos clave:
 
-⋅⋅* Se quedan las clases `StreamingService` y `DownloadService`. 
++ Se quedan las clases `StreamingService` y `DownloadService`. 
 Para simplificar el ejemplo, supondremos que solo van a tener un coeficiente de precio sobre el valor de la película.
 
-⋅⋅* MultimediaContent solo tiene un valor price.
++ MultimediaContent solo tiene un valor price.
 
 ```
 getTotal() {
@@ -72,6 +72,6 @@ getTotal() {
 }
 ```
 
-⋅⋅* * He dejado fuera la opción de tener varias calidades. Si distinguiésemos entre FullHD y 4K, las clases SreamingService y DownloadService tendrían dos variables float, y un flag que indicase el tipo de calidad (`int` o `string`) y realizaríamos la comparación antes del `return service.movieCoef * multimediaCon ...` 
++ He dejado fuera la opción de tener varias calidades. Si distinguiésemos entre FullHD y 4K, las clases SreamingService y DownloadService tendrían dos variables float, y un flag que indicase el tipo de calidad (`int` o `string`) y realizaríamos la comparación antes del `return service.movieCoef * multimediaCon ...` 
 
-⋅⋅* * Para comprobar que no hay problemas con la extracción del MultimediaContent he colocado un condicional, para no complicarlo mucho, pero lo ideal sería usar un `try…catch` o similar para manejar los errores.
++ Para comprobar que no hay problemas con la extracción del MultimediaContent he colocado un condicional, para no complicarlo mucho, pero lo ideal sería usar un `try…catch` o similar para manejar los errores.
