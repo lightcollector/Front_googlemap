@@ -1,11 +1,8 @@
-// cargamos la función para crear un store
+// func to load a store
 import { createStore } from 'redux';
-// cargamos nuestros reducers (ya combinados)
-import reducers from './reducers.js';
-// definimos el estado inicial
-const initialState = {
-    markers: [],
-  };
-// creamos el store
-const store = createStore(reducers, initialState);
+// load reducers (already combined)
+import rootReducer from './reducers.js';
+
+// we build the store
+const store = createStore(rootReducer);
 export default store;
