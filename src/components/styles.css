@@ -10,9 +10,33 @@
   user-select: none;
   transform: translate(-50%, -50%);
 }
-.searchbox {
+
+@media (max-width: 767px) {
+  .searchbox_field, .searchbox_field:focus {
+    width: 60vw;
+  }
+}
+@media(min-width: 768px) {
+  .searchbox_field, .searchbox_field:focus {
+    width: 20%;
+  }
+}
+
+.searchbox_field, .searchbox_field:focus {
+  
   border: 1px solid black;
+  outline: none;
   border-radius: 0px;
-  height: 10em;
+  height: 1.8em;
+  padding: 5px 10px;
+  /* width: 20%; */
+
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.2em;
+  text-transform: uppercase;
   z-index: 10 ;
+  
+  /* chapuza para centrar y "subir" el SearchBox, el cual se queda en el punto central del mapa*/
+  /* se queda en el punto central, pero es su (0,0) alineado top-left. Esto ocurre por la distrubucióno del mapa. Debería revisarse a conciencia */
+  transform: translate(-50%, -40vh);
 }

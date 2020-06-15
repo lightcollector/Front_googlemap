@@ -78,8 +78,7 @@ class SearchBox extends Component {
   };
 
   clearSearchBox() {
-    this.searchBox.value = '';
-    document.getElementsByTagName('input').value = '';
+    document.getElementsByClassName('searchbox_field')[0].value = '';
   }
 
   render() {
@@ -87,6 +86,7 @@ class SearchBox extends Component {
 
     return (
       <input
+        className="searchbox_field"
         ref={this.searchInput}
         placeholder={placeholder}
         type="text"
