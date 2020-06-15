@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import { bootstrapURLKeys } from '../config/bootstrapURLKeys';
-import Marker from './Mark'
-//const ComponentForMapRender = ({ text }) => <div>{text}</div>;
+import { connect } from 'react-redux'
+import Mark from './Mark'
+import './styles.css';
+import SearchBox from './SearchBox'
 
-const handleApiLoaded = (map, maps) => {
-  // use map and maps objects
-};
-
+const mapStateToProps = (state) => {
+  return {
+    storedMarkers: state.markers
+  }
+}
 
 class Map extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      storedMarkers: [],
+      mapsApiLoaded: false,
+      mapInstance: null,
+      mapsapi: null,
+    };
+
+  }
   static defaultProps = {
     center: {
       lat: 41.40360,
@@ -18,8 +31,18 @@ class Map extends Component {
     zoom: 13
   };
 
+  apiLoaded = (map, maps) => {
+      this.setState({
+        mapsApiLoaded: true,
+        mapInstance: map,
+        mapsapi: maps,
+      })
+  };
+
 
   render() {
+    console.log("aqui ando");
+    console.log(this.state.mapsapi);
     return (
       // Important! Always set the container height explicitly
       <div style={{ height: '100vh', width: '100%' }}>
@@ -27,19 +50,26 @@ class Map extends Component {
           bootstrapURLKeys={bootstrapURLKeys}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={({ map, maps }) => { this.apiLoaded(map, maps); }}
         >
-          {/* <ComponentForMapRender
-            lat={41.40360}
-            lng={2.15377}
-            text=""
-          /> */}
+          {this.props.storedMarkers.map((mark, index) => (
+            <Mark
+              key={index}
+              name={"marker tests"}
+              lat={mark.lat}
+              lng={mark.lng}
+            />
+          ))}
+          {this.state.mapsApiLoaded && <SearchBox className="searchbox" map={this.state.mapInstance} mapsapi={this.state.mapsapi} />}
+          {/* <SearchBox map={this.state.mapInstance} mapsapi={this.state.mapsapi} /> */}
         </GoogleMapReact>
       </div>
     );
   }
 }
 
-export default Map;
+export default connect(mapStateToProps)(Map);
 
 
 
