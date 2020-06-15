@@ -7,7 +7,6 @@ export const ADD_MARKER = 'ADD_MARKER';
 export const addMarker = (mrkerObj) => {
     return {
         type: ADD_MARKER,
-        id: mrkerObj.id,
         lat: mrkerObj.lat,
         lng: mrkerObj.lng
       }    
