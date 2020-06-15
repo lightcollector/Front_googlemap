@@ -6,6 +6,7 @@ import Mark from './Mark'
 import './styles.css';
 import SearchBox from './SearchBox'
 
+// Giving the component acces to the store state, which has the markers info
 const mapStateToProps = (state) => {
   return {
     storedMarkers: state.markers
@@ -31,6 +32,8 @@ class Map extends Component {
     zoom: 13
   };
 
+  // loading the Google Maps Api to access the methods and variables
+  // we will pass this map object and api to the children rendered, so everything works together in the same map
   apiLoaded = (map, maps) => {
       this.setState({
         mapsApiLoaded: true,
@@ -41,10 +44,7 @@ class Map extends Component {
 
 
   render() {
-    console.log("aqui ando");
-    console.log(this.state.mapsapi);
     return (
-      // Important! Always set the container height explicitly
       <div style={{ height: '100vh', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={bootstrapURLKeys}
@@ -56,13 +56,12 @@ class Map extends Component {
           {this.props.storedMarkers.map((mark, index) => (
             <Mark
               key={index}
-              name={"marker tests"}
+              name={mark.lat}
               lat={mark.lat}
               lng={mark.lng}
             />
           ))}
           {this.state.mapsApiLoaded && <SearchBox className="searchbox" map={this.state.mapInstance} mapsapi={this.state.mapsapi} />}
-          {/* <SearchBox map={this.state.mapInstance} mapsapi={this.state.mapsapi} /> */}
         </GoogleMapReact>
       </div>
     );

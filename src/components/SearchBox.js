@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './styles.css';
+import store from '../redux/store'
+import { addMarker } from '../redux/actions'
 
 class SearchBox extends Component {
   static propTypes = {
@@ -24,6 +26,7 @@ class SearchBox extends Component {
   constructor(props) {
     super(props);
     this.searchInput = React.createRef();
+    this.onPlacesChanged = this.onPlacesChanged.bind(this);
   }
 
   componentDidMount() {
@@ -43,13 +46,41 @@ class SearchBox extends Component {
     event.clearInstanceListeners(this.searchBox);
   }
 
-  onPlacesChanged = () => {
-    const { onPlacesChanged } = this.props;
 
-    if (onPlacesChanged) {
-      onPlacesChanged(this.searchBox.getPlaces());
-    }
+
+  onPlacesChanged = ({ map, addplace } = this.props) => {
+    
+    //get info from the selected place by the user
+    const place = this.searchBox.getPlaces();
+    if (place.length !== 0) {
+      // centering the map's view on the selected place
+      if (place[0].geometry.viewport) {
+        map.fitBounds(place[0].geometry.viewport);
+        map.setCenter(place[0].geometry.location);
+        map.setZoom(13);
+      } else {
+        map.setCenter(place[0].geometry.location);
+        map.setZoom(12);
+      }
+
+      let markerToAdd = {
+        name: place[0].name,
+        lat: place[0].geometry.location.lat(),
+        lng: place[0].geometry.location.lng()
+      }
+
+      //console.log(place[0].geometry.decodePath);
+
+      store.dispatch(addMarker(markerToAdd));
+  }
+    this.clearSearchBox();
+    
   };
+
+  clearSearchBox() {
+    this.searchBox.value = '';
+    document.getElementsByTagName('input').value = '';
+  }
 
   render() {
     const { placeholder } = this.props;

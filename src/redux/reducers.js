@@ -1,9 +1,12 @@
 import { combineReducers } from 'redux';
 
-const initialState = [
-  { id: 1, lat: 41.393039, lng: 2.173848 },
-  { id: 2, lat: 41.393385, lng: 2.181907 },
-]
+// const initialState = [
+//   { id: 1, lat: 41.393039, lng: 2.173848 },
+//   { id: 2, lat: 41.393385, lng: 2.181907 },
+// ]
+
+const initialState = []
+
 
 // reducer to update the marker list (state) of the Store.
 const markersReducer = (state = initialState, action) => {
@@ -11,6 +14,7 @@ const markersReducer = (state = initialState, action) => {
         return [
             ...state,
             {
+                name: action.name,
                 lat: action.lat,
                 lng: action.lng
             }
