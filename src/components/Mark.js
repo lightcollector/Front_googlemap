@@ -8,6 +8,7 @@ const Mark = (props) => {
         style={{ backgroundColor: color, cursor: 'pointer'}}
         title={name}
       />
+      
     );
   };
 
